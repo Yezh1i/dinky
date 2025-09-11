@@ -15,13 +15,12 @@ jobs:
         with:
           node-version: 22.18.0
       - name: Install dependencies
-        run: bash
-        working-directory: ./web
-      - name: Setup Web Working Directory
         run: npm ci
+        working-directory: ./web
       - name: Run Chromatic
         uses: chromaui/action@latest
         with:
           # ⚠️ Make sure to configure a `CHROMATIC_PROJECT_TOKEN` repository secret
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: ./web
           zip: true
