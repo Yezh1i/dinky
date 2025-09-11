@@ -1,25 +1,3 @@
-// import type { Preview } from '@storybook/react-vite'
-//
-// const preview: Preview = {
-//   parameters: {
-//     controls: {
-//       matchers: {
-//        color: /(background|color)$/i,
-//        date: /Date$/i,
-//       },
-//     },
-//
-//     a11y: {
-//       // 'todo' - show a11y violations in the test UI only
-//       // 'error' - fail CI on a11y violations
-//       // 'off' - skip a11y checks entirely
-//       test: 'todo'
-//     }
-//   },
-// };
-//
-// export default preview;
-
 import {Suspense, useEffect, useMemo} from "react";
 import {I18nextProvider} from "react-i18next";
 import i18n, {initializeI18n} from "../src/i18n";
@@ -27,7 +5,7 @@ import type {StoryContext} from "@storybook/react-vite";
 import {PageLoading} from "@ant-design/pro-components";
 import "../src/global.css";
 import {useMainPageStore} from "../src/store/MainPageStore";
-import {ConfigProvider} from "antd";
+import {ConfigProvider,theme as antdTheme} from "antd";
 import {StyleProvider} from "@ant-design/cssinjs";
 
 export const globalTypes = {
@@ -88,7 +66,7 @@ const i18nextStoryDecorator = (Story: React.ComponentType, context: StoryContext
                 <StyleProvider layer>
                     <ConfigProvider
                         theme={{
-                            algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+                            algorithm: isDarkMode ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
                             token: themeConfig
                         }}>
                         <Story/>
