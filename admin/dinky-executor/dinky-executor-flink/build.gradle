@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'java-library'
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
+dependencies {
+    implementation(project(':dinky-executor:dinky-executor-flink:dinky-executor-flink-base-1.x'))
+    implementation(project(':dinky-executor:dinky-executor-flink:dinky-executor-flink-1.18'))
+//    api(project(':dinky-executor:dinky-executor-flink:dinky-executor-flink-base-2.x'))
+//    api(project(':dinky-executor:dinky-executor-flink:dinky-executor-flink-2.0'))
+}
+tasks.named('compileJava') {
+//    dependsOn ':dinky-executor:dinky-executor-flink:dinky-executor-flink-base-1.x:jar'
+//    dependsOn ':dinky-executor:dinky-executor-flink:dinky-executor-flink-1.18:jar'
+    dependsOn ':dinky-executor:dinky-executor-flink:dinky-executor-flink-base-2.x:jar'
+    dependsOn ':dinky-executor:dinky-executor-flink:dinky-executor-flink-2.0:jar'
+}
+//compileJava.dependsOn(project(':dinky-executor:dinky-executor-flink:dinky-executor-flink-base-1.x').tasks.named('jar'))
+//compileJava.dependsOn(project(':dinky-executor:dinky-executor-flink:dinky-executor-flink-1.18').tasks.named('jar'))
+//compileJava.dependsOn(project(':dinky-executor:dinky-executor-flink:dinky-executor-flink-base-2.x').tasks.named('jar'))
+//compileJava.dependsOn(project(':dinky-executor:dinky-executor-flink:dinky-executor-flink-2.0').tasks.named('jar'))

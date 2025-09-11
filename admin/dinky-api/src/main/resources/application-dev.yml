@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:./temp/db/dinky
+    username: root
+    password: dinky123!@#
+    driver-class-name: org.h2.Driver
+mybatis-plus:
+  configuration:
+    cache-enabled: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

@@ -1,0 +1,13 @@
+knife4j:
+  basic:
+    enable: true
+    username: dinky
+    password: dinky123!@#
+spring:
+  datasource:
+    druid:
+      stat-view-servlet:
+        # 访问用户名
+        login-username: dinky
+        # 访问密码
+        login-password: dinky123!@#

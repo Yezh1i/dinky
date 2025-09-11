@@ -1,0 +1,12 @@
+{
+    "menu": {
+        "home": "Home",
+        "err_test": {
+            "title": "ErrCodeTest",
+            "404":"404 Page",
+            "500":"500 Page",
+            "403":"403 Page",
+            "200":"200 Page"
+        }
+    }
+}

@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'java-library'
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
+
+dependencies {
+    api 'commons-cli:commons-cli:1.10.0'
+    api(libs.fastjson)
+//    api(libs.druid)
+    api(libs.hutool.db)
+    api("com.dtflys.forest:forest-core:1.7.3")
+    api(libs.hutool.cache)
+    api(libs.hutool.system)
+
+    compileOnlyApi(libs.slf4j.api)
+    compileOnlyApi(libs.logback.classic)
+}
+//jar {
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//    archiveFileName = project.name + "-" + version + '.jar'
+//    from {
+//        configurations.runtimeClasspath.collect {
+//            it.isDirectory() ? it : zipTree(it)
+//        }
+//    }
+//    exclude("**/tpch/**", "**/tpcds/**", "**/schema/**")
+//    buildDir(rootProject.getLayout().buildDirectory)
+//
+//
+//}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,0 +1,18 @@
+{
+  "login": {
+    "title": "Dinky 实时计算平台",
+    "subtitle": "请登录您的账户",
+    "username": "用户名",
+    "password": "密码",
+    "rememberMe": "记住我",
+    "forgotPassword": "忘记密码？",
+    "loginButton": "登录",
+    "registerLink": "还没有账户？立即注册",
+    "copyright": "© 2024 Dinky. 保留所有权利。",
+    "usernameRequired": "请输入用户名",
+    "passwordRequired": "请输入密码",
+    "loginSuccess": "登录成功",
+    "loginFailed": "登录失败，请检查用户名和密码"
+  }
+
+}

@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'java-library'
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
+
+dependencies {
+    api(project(":dinky-executor:dinky-executor-base"))
+    api(project(":dinky-executor:dinky-executor-flink"))
+
+}
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveFileName = project.name + "-" + version + '.jar'
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+//    exclude("**/tpch/**", "**/tpcds/**", "/schema/**")
+    exclude("/schema/**")
+    buildDir(rootProject.getLayout().buildDirectory)
+    destinationDirectory = rootProject.getLayout().buildDirectory.dir("plugins/executor")
+}
+
+test {
+    useJUnitPlatform()
+}

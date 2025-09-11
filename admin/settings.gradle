@@ -1,0 +1,38 @@
+pluginManagement {
+    repositories {
+        maven {
+            url 'https://maven.aliyun.com/repository/central'
+        }
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        maven {
+            url 'https://maven.aliyun.com/repository/central'
+        }
+        mavenCentral()
+    }
+}
+rootProject.name = 'admin'
+
+include(':dinky-common')
+include(':dinky-api')
+include(':dinky-executor')
+include(':dinky-executor:dinky-executor-base')
+findProject(':dinky-executor:dinky-executor-base')?.name = 'dinky-executor-base'
+
+include(':dinky-executor:dinky-executor-flink')
+findProject(':dinky-executor:dinky-executor-flink')?.name = 'dinky-executor-flink'
+
+include(':dinky-executor:dinky-executor-flink:dinky-executor-flink-base-1.x')
+findProject(':dinky-executor:dinky-executor-flink:dinky-executor-flink-base-1.x')?.name = 'dinky-executor-flink-base-1.x'
+
+include(':dinky-executor:dinky-executor-flink:dinky-executor-flink-base-2.x')
+findProject(':dinky-executor:dinky-executor-flink:dinky-executor-flink-base-2.x')?.name = 'dinky-executor-flink-base-2.x'
+include(':dinky-executor:dinky-executor-flink:dinky-executor-flink-1.18')
+findProject(':dinky-executor:dinky-executor-flink:dinky-executor-flink-1.18')?.name = 'dinky-executor-flink-1.18'
+include(':dinky-executor:dinky-executor-flink:dinky-executor-flink-2.0')
+findProject(':dinky-executor:dinky-executor-flink:dinky-executor-flink-2.0')?.name = 'dinky-executor-flink-2.0'
+

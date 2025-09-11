@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'java-library'
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
+
+dependencies {
+    implementation(project(":dinky-executor:dinky-executor-flink:dinky-executor-flink-base-2.x"))
+
+    compileOnly('org.apache.flink:flink-table-api-java-bridge:2.0.0')
+}
+jar {
+    archiveFileName = project.name + "-" + version + '.jar'
+    buildDir(rootProject.getLayout().buildDirectory)
+    destinationDirectory = rootProject.getLayout().buildDirectory.dir("plugins/executor")
+}
+tasks.named('compileJava') {
+    dependsOn ':dinky-executor:dinky-executor-flink:dinky-executor-flink-base-2.x:jar'
+}

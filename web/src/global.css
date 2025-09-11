@@ -1,0 +1,28 @@
+@layer theme, base, antd, components, utilities;
+/*@import "tailwindcss";*/
+@import "tailwindcss/theme.css" layer(theme);
+/*@import "tailwindcss/preflight.css" layer(base);*/
+@import "tailwindcss/utilities.css" layer(utilities);
+@custom-variant dark (&:where(.dark, .dark *));
+
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+    @apply box-border ;
+}
+html body {
+    margin: 0;
+}
+button {
+    @apply cursor-pointer border-0;
+}
+@layer utilities {
+    /*.nav-wrapper {*/
+    /*    .ant-menu-item, .ant-menu-submenu-title, li > .ant-menu-submenu,  .ant-menu-submenu {*/
+    /*        @apply flex items-center space-x-1 list-none  before:hidden;*/
+    /*        !* 去掉圆点、间距、伪元素 *!*/
+    /*    }*/
+    /*}*/
+}
