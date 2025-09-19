@@ -7,6 +7,7 @@ import {useI18n} from '@/i18n.ts';
 import {Avatar, Button, Card, Dropdown, Menu, type MenuProps as AntdMenuProps} from "antd";
 import type {MenuItemType} from "antd/es/menu/interface";
 import {routes} from "@/config/route.tsx";
+import {SettingOutlined} from "@ant-design/icons";
 
 interface HeaderProps {
     title?: string;
@@ -58,6 +59,7 @@ const Header: React.FC<HeaderProps> = ({
 
                         {/* 通知 */}
                         <Button title={t('header.notifications')} icon={<Bell size={20}/>}/>
+                        <Button title={t('header.notifications')} size={"large"} icon={<SettingOutlined/>}/>
 
                         {/* 用户 */}
                         <Dropdown popupRender={() => <Card className="w-64" size={"small"}>

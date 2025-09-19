@@ -1,4 +1,4 @@
-package org.dinky.api.data.task.dto;
+package org.dinky.api.data.dto.task;
 
 import com.alibaba.fastjson2.JSONObject;
 import org.dinky.common.data.entity.Task;

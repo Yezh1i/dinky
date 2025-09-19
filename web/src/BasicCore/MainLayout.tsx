@@ -1,9 +1,9 @@
 import {Outlet, useLocation, useNavigate} from "react-router";
 // import { useMainPageStore } from "../store/MainPageStore";
-import { useEffect } from "react";
+import {useEffect} from "react";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import { useMainPageStore } from "../store/MainPageStore";
+import {useMainPageStore} from "../store/MainPageStore";
 
 const MainLayout = () => {
     const location = useLocation();
@@ -15,13 +15,11 @@ const MainLayout = () => {
 
     return (
         <>
-            <Header title="Dinky" navigate={navigate} />
+            <Header title="Dinky" navigate={navigate}/>
             <div className="flex flex-1 overflow-hidden">
-                {sideMenuRoutes && sideMenuRoutes.length > 0 && <Sidebar />}
-                <div className="p-4 w-full">
-                    <div className="bg-white">
-                        <Outlet /> {/* 子路由渲染区域 */}
-                    </div>
+                {sideMenuRoutes && sideMenuRoutes.length > 0 && <Sidebar/>}
+                <div className="p-4 w-full bg-white flex flex-col">
+                    <Outlet/> {/* 子路由渲染区域 */}
                 </div>
             </div>
         </>

@@ -1,4 +1,4 @@
-package org.dinky.api.config;
+package org.dinky.api.aop.exception;
 
 
 import cn.dev33.satoken.exception.NotLoginException;

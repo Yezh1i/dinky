@@ -2,9 +2,8 @@ package org.dinky.api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
-import org.dinky.api.data.task.dto.TaskDTO;
+import org.dinky.api.data.dto.task.TaskDTO;
 import org.dinky.api.service.task.TaskService;
-import org.dinky.common.data.entity.Task;
 import org.dinky.common.data.vo.Resp;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

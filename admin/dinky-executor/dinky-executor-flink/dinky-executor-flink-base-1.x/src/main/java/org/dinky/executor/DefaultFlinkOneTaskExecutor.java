@@ -12,8 +12,6 @@ import org.dinky.executor.data.FlinkTaskExecutorParam;
 import org.dinky.executor.task.BaseFlinkTaskExecutor;
 import org.dinky.executor.task.TaskExecutor;
 
-import java.rmi.RemoteException;
-
 public abstract class DefaultFlinkOneTaskExecutor extends BaseFlinkTaskExecutor implements TaskExecutor {
     @Override
     public void submit(JSONObject taskConfig,JSONObject taskParams) {
@@ -28,11 +26,7 @@ public abstract class DefaultFlinkOneTaskExecutor extends BaseFlinkTaskExecutor 
         String jobId = result.getJobClient().get().getJobID().toHexString();
 
         TaskRemoteService task = RmiContext.getService("task");
-        try {
-            task.taskStatusCallback(jobId);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        task.taskStatusCallback(jobId);
     }
 
     public abstract String version();

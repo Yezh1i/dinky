@@ -3,6 +3,7 @@
 @import "tailwindcss/theme.css" layer(theme);
 /*@import "tailwindcss/preflight.css" layer(base);*/
 @import "tailwindcss/utilities.css" layer(utilities);
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 *,
@@ -12,12 +13,33 @@
 ::file-selector-button {
     @apply box-border ;
 }
+
 html body {
     margin: 0;
 }
+
 button {
     @apply cursor-pointer border-0;
 }
+
+.dock-vbox > .dock-divider {
+    flex: 0 0 1px;
+    background: transparent;
+}
+
+.dock-box > .dock-style-toolbar-left {
+    border: none;
+    border-right: 1px solid #ddd;
+}
+.dock-box > .dock-style-toolbar-right {
+    border: none;
+    border-left: 1px solid #ddd;
+}
+.dock-box > .dock-style-toolbar-bottom {
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
 @layer utilities {
     /*.nav-wrapper {*/
     /*    .ant-menu-item, .ant-menu-submenu-title, li > .ant-menu-submenu,  .ant-menu-submenu {*/

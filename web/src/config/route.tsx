@@ -1,3 +1,4 @@
+import { ConsoleSqlOutlined } from "@ant-design/icons";
 import { IconDemo } from '../icons/IconDemo';
 import type { RouteConfig } from '../store/MainPageStore';
 
@@ -5,9 +6,9 @@ import type { RouteConfig } from '../store/MainPageStore';
 export const routes: RouteConfig[] = [
     {
         path: '/',
-        name: "首页",
-        icon: <IconDemo />,
-        pageKey: "ErrorPage/200",
+        name: "开发",
+        icon: <ConsoleSqlOutlined />,
+        pageKey: "DataStudio",
         // hideInMenu: true,
     },
     {

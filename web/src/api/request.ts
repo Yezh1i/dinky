@@ -1,10 +1,9 @@
-
-
 // import { message } from 'antd';
-import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import type {AxiosInstance, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import axios from 'axios';
 import type {Resp} from "@/api/resp.ts";
 import {TOKEN_KEY} from "@/constants/user.ts";
+import i18n from "@/i18n.ts";
 
 // 创建 axios 实例
 const service: AxiosInstance = axios.create({
@@ -25,6 +24,8 @@ service.interceptors.request.use(
         if (token && config.headers) {
             config.headers['token'] = `${token}`;
         }
+        // 国际化
+        config.headers['Accept-Language'] = i18n.language ?? 'zh-CN';
         // if (project) {
         //     config.headers['projectId'] = `${project.project_id}`;
         //     config.headers['env'] = `${project.env}`;
@@ -63,9 +64,9 @@ service.interceptors.response.use(
             return Promise.reject(new Error(res.msg));
         }
         const token = localStorage.getItem(TOKEN_KEY);
-        if (!token){
+        if (!token) {
             const loginToken = response.headers[TOKEN_KEY];
-            if (loginToken){
+            if (loginToken) {
                 console.log(loginToken)
                 localStorage.setItem(TOKEN_KEY, loginToken)
             }
@@ -89,15 +90,18 @@ service.interceptors.response.use(
 // 定义请求方法的类型
 interface RequestMethods {
     get<T = unknown>(url: string, params?: Record<string, unknown>): Promise<T>;
+
     post<T = unknown>(url: string, data?: Record<string, unknown>): Promise<T>;
+
     put<T = unknown>(url: string, data?: Record<string, unknown>): Promise<T>;
+
     delete<T = unknown>(url: string, params?: Record<string, unknown>): Promise<T>;
 }
 
 // 封装 GET/POST/PUT/DELETE
 const request: RequestMethods = {
     get(url, params) {
-        return service.get(url, { params });
+        return service.get(url, {params});
     },
     post(url, data) {
         return service.post(url, data);
@@ -106,7 +110,7 @@ const request: RequestMethods = {
         return service.put(url, data);
     },
     delete(url, params) {
-        return service.delete(url, { params });
+        return service.delete(url, {params});
     }
 };
 

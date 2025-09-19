@@ -7,7 +7,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 @Configuration
-@MapperScan("com.zerogap.**.mapper")
+@MapperScan("org.dinky.api.mapper")
 public class MybatisPlusConfig {
 
     /**

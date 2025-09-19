@@ -29,11 +29,7 @@ public abstract class DefaultFlinkTwoTaskExecutor extends BaseFlinkTaskExecutor 
         String jobId = result.getJobClient().get().getJobID().toHexString();
 
         TaskRemoteService task = RmiContext.getService("task");
-        try {
-            task.taskStatusCallback(jobId);
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        task.taskStatusCallback(jobId);
     }
 
     public abstract String version();

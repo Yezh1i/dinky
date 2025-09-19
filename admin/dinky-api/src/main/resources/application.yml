@@ -4,8 +4,6 @@ server:
     encoding:
       force-response: true
     context-path: /dinky
-rmi:
-  port: 8887
 spring:
   messages:
     basename: i18n/message
