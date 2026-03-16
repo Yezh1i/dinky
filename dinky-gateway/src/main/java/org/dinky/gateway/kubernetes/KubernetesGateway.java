@@ -237,8 +237,7 @@ public abstract class KubernetesGateway extends AbstractGateway {
             return TestResult.success();
         } catch (Exception e) {
             logger.error(Status.GATEWAY_KUBERNETES_TEST_FAILED.getMessage(), e);
-            String errorDetail =
-                    e.getMessage() != null ? e.getMessage() : e.toString();
+            String errorDetail = e.getMessage() != null ? e.getMessage() : e.toString();
             return TestResult.fail(
                     StrFormatter.format("{} {}", Status.GATEWAY_KUBERNETES_TEST_FAILED.getMessage(), errorDetail));
         } finally {
