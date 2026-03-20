@@ -252,6 +252,29 @@ jobs:
           kubectl create namespace dinky
           kubectl create serviceaccount dinky -n dinky
           kubectl create clusterrolebinding flink-role-binding-dinky --clusterrole=edit --serviceaccount=dinky:dinky
+          cat <<EOF | kubectl apply -f -
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRole
+          metadata:
+            name: dinky-node-reader
+          rules:
+          - apiGroups: [""]
+            resources: ["nodes"]
+            verbs: ["get", "list", "watch"]
+          ---
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRoleBinding
+          metadata:
+            name: dinky-node-reader-binding
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: dinky-node-reader
+          subjects:
+          - kind: ServiceAccount
+            name: dinky
+            namespace: dinky
+          EOF
           mkdir ./kube
           cat <<EOF > ./kube/k3s.yaml
           apiVersion: v1
