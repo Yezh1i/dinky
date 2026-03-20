@@ -117,16 +117,12 @@ const DocumentTableList: React.FC = () => {
       title: l('rc.doc.functionType'),
       sorter: true,
       dataIndex: 'type',
-      filterMultiple: true,
-      filters: true,
       valueEnum: DOCUMENT_TYPE_ENUMS
     },
     {
       title: l('rc.doc.subFunctionType'),
       sorter: true,
       dataIndex: 'subtype',
-      filters: true,
-      filterMultiple: true,
       renderFormItem: (item, { type }, form) => {
         const currentType = form.getFieldValue('type');
         let options = currentType === DOCUMENT_TYPE_ENUMS.FUN_UDF.value ? FUNCTION_TYPES :  JOB_TYPE;
@@ -139,8 +135,6 @@ const DocumentTableList: React.FC = () => {
       title: l('rc.doc.category'),
       sorter: true,
       dataIndex: 'category',
-      filterMultiple: true,
-      filters: true,
       valueEnum: DOCUMENT_CATEGORY_ENUMS
     },
     {
@@ -172,11 +166,11 @@ const DocumentTableList: React.FC = () => {
     {
       title: l('global.table.isEnable'),
       dataIndex: 'enabled',
-      hideInSearch: true,
-      filters: STATUS_MAPPING(),
-      filterMultiple: false,
       hideInDescriptions: true,
-      valueEnum: STATUS_ENUM(),
+      valueType: 'select',
+      valueEnum: Object.fromEntries(
+        STATUS_MAPPING().map(item => [item.value, { text: item.text, status: item.value === 1 ? 'Success' : 'Error' }])
+      ),
       render: (_, record) => {
         return (
           <EnableSwitchBtn
