@@ -41,12 +41,9 @@ import org.apache.flink.configuration.PipelineOptions;
 import org.apache.flink.kubernetes.KubernetesClusterClientFactory;
 import org.apache.flink.kubernetes.KubernetesClusterDescriptor;
 import org.apache.flink.kubernetes.configuration.KubernetesConfigOptions;
-import org.apache.flink.kubernetes.kubeclient.Fabric8FlinkKubeClient;
-import org.apache.flink.kubernetes.kubeclient.FlinkKubeClient;
 import org.apache.flink.python.PythonOptions;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
@@ -225,16 +222,9 @@ public abstract class KubernetesGateway extends AbstractGateway {
             // Test mode no jobName, use uuid .
             addConfigParas(KubernetesConfigOptions.CLUSTER_ID, UUID.randomUUID().toString());
             initConfig();
-            FlinkKubeClient client = k8sClientHelper.getClient();
-            if (client instanceof Fabric8FlinkKubeClient) {
-                Object internalClient = ReflectUtil.getFieldValue(client, "internalClient");
-                Method method = ReflectUtil.getMethod(internalClient.getClass(), "getVersion");
-                Object versionInfo = method.invoke(internalClient);
-                logger.info(
-                        "k8s cluster link successful ; k8s version: {} ; platform: {}",
-                        ReflectUtil.getFieldValue(versionInfo, "gitVersion"),
-                        ReflectUtil.getFieldValue(versionInfo, "platform"));
-            }
+            String namespace = configuration.get(KubernetesConfigOptions.NAMESPACE);
+            k8sClientHelper.getKubernetesClient().pods().inNamespace(namespace).list();
+            logger.info("k8s cluster link successful ; namespace: {}", namespace);
             return TestResult.success();
         } catch (Exception e) {
             logger.error(Status.GATEWAY_KUBERNETES_TEST_FAILED.getMessage(), e);
