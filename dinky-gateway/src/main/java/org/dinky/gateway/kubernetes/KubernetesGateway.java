@@ -45,6 +45,7 @@ import org.apache.flink.kubernetes.kubeclient.Fabric8FlinkKubeClient;
 import org.apache.flink.kubernetes.kubeclient.FlinkKubeClient;
 import org.apache.flink.python.PythonOptions;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
@@ -237,12 +238,29 @@ public abstract class KubernetesGateway extends AbstractGateway {
             return TestResult.success();
         } catch (Exception e) {
             logger.error(Status.GATEWAY_KUBERNETES_TEST_FAILED.getMessage(), e);
-            String errorDetail = e.getMessage() != null ? e.getMessage() : e.toString();
+            String errorDetail = extractTestErrorDetail(e);
             return TestResult.fail(
                     StrFormatter.format("{} {}", Status.GATEWAY_KUBERNETES_TEST_FAILED.getMessage(), errorDetail));
         } finally {
             close();
         }
+    }
+
+    static String extractTestErrorDetail(Throwable throwable) {
+        Throwable rootCause = throwable;
+        while (rootCause instanceof InvocationTargetException
+                && ((InvocationTargetException) rootCause).getTargetException() != null) {
+            rootCause = ((InvocationTargetException) rootCause).getTargetException();
+        }
+        while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
+            rootCause = rootCause.getCause();
+        }
+
+        String message = rootCause.getMessage();
+        if (StringUtils.isBlank(message)) {
+            return rootCause.getClass().getName();
+        }
+        return StrFormatter.format("{}: {}", rootCause.getClass().getName(), message);
     }
 
     @Override
