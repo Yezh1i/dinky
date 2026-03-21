@@ -246,13 +246,55 @@ jobs:
           version: v1.35.2+k3s1
           k3d-args: -s 1 --network dinky_net --api-port 172.28.0.1:6550
           k3d-tag: v5.7.5
-      - name: Get k3s kube config
-        run: k3d kubeconfig get --all  && mkdir ./kube && k3d kubeconfig get --all >  ./kube/k3s.yaml && sed -i 's/0.0.0.0/172.28.0.1/g' ./kube/k3s.yaml
       - name: Init k8s RBAC and namespace
         run: |
           kubectl create namespace dinky
           kubectl create serviceaccount dinky -n dinky
           kubectl create clusterrolebinding flink-role-binding-dinky --clusterrole=edit --serviceaccount=dinky:dinky
+          cat <<EOF | kubectl apply -f -
+                    apiVersion: rbac.authorization.k8s.io/v1
+                    kind: ClusterRole
+                    metadata:
+                      name: dinky-node-reader
+                    rules:
+                    - apiGroups: [""]
+                      resources: ["nodes"]
+                      verbs: ["get", "list", "watch"]
+                    ---
+                    apiVersion: rbac.authorization.k8s.io/v1
+                    kind: ClusterRoleBinding
+                    metadata:
+                      name: dinky-node-reader-binding
+                    roleRef:
+                      apiGroup: rbac.authorization.k8s.io
+                      kind: ClusterRole
+                      name: dinky-node-reader
+                    subjects:
+                    - kind: ServiceAccount
+                      name: dinky
+                      namespace: dinky
+                    EOF
+                    mkdir ./kube
+                    cat <<EOF > ./kube/k3s.yaml
+                    apiVersion: v1
+                    kind: Config
+                    clusters:
+                    - name: k3d-default
+                      cluster:
+                        server: https://172.28.0.1:6550
+                        insecure-skip-tls-verify: true
+                    users:
+                    - name: dinky
+                      user:
+                        token: $(kubectl create token dinky -n dinky)
+                    contexts:
+                    - name: dinky
+                      context:
+                        cluster: k3d-default
+                        namespace: dinky
+                        user: dinky
+                    current-context: dinky
+                    EOF
       - name: Init k3s main images
         run: |
           docker exec k3d-k3s-default-server-0 crictl pull library/busybox:latest
