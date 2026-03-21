@@ -33,12 +33,13 @@ def addStandaloneCluster(session: Session) -> int:
 
 def addApplicationCluster(session: Session, params: dict) -> Optional[int]:
     name = params['name']
-    test_connection_yarn_resp = session.post(url("api/clusterConfiguration/testConnect"), json=params)
-    assertRespOk(test_connection_yarn_resp, "Test yarn connectivity")
-    test_connection_yarn_resp = session.put(url("api/clusterConfiguration/saveOrUpdate"), json=params)
-    assertRespOk(test_connection_yarn_resp, "Add Yarn Application Cluster")
+    cluster_type = params["type"]
+    test_connection_resp = session.post(url("api/clusterConfiguration/testConnect"), json=params)
+    assertRespOk(test_connection_resp, f"Test {cluster_type} connectivity")
+    save_cluster_resp = session.put(url("api/clusterConfiguration/saveOrUpdate"), json=params)
+    assertRespOk(save_cluster_resp, f"Add {cluster_type} cluster")
     get_app_list = session.get(url(f"api/clusterConfiguration/list?keyword={name}"), json=params)
-    assertRespOk(get_app_list, "Get Yarn Application Cluster")
+    assertRespOk(get_app_list, f"Get {cluster_type} cluster")
     for data in get_app_list.json()["data"]:
         if data["name"] == name:
             return data['id']
