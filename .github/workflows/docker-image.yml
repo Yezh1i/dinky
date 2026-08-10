@@ -18,12 +18,14 @@ concurrency:
 
 jobs:
   docker:
-    name: Build and push Flink 1.18 image
+    name: Build and push Flink 1.20.3 + CDC 3.6 image
     runs-on: ubuntu-24.04
     timeout-minutes: 60
 
     env:
-      FLINK_VERSION: "1.18"
+      FLINK_VERSION: "1.20"
+      FLINK_IMAGE_VERSION: "1.20.3"
+      FLINK_CDC_VERSION: "3.6.0-1.20"
       MAVEN_OPTS: -Xms1g -Xmx4g
 
     steps:
@@ -72,7 +74,7 @@ jobs:
             -Dspotless.check.skip=true \
             -Denforcer.skip=true \
             -Dmaven.javadoc.skip=true \
-            -Pprod,flink-single-version,flink-1.18,maven-central,fast \
+            -Pprod,flink-single-version,flink-1.20,maven-central,fast \
             --no-snapshot-updates
           test -n "$(find build -name 'dinky-release-*.tar.gz' -print -quit)"
 
@@ -109,8 +111,10 @@ jobs:
           push: true
           build-args: |
             FLINK_VERSION=${{ env.FLINK_VERSION }}
+            FLINK_IMAGE_VERSION=${{ env.FLINK_IMAGE_VERSION }}
+            FLINK_CDC_VERSION=${{ env.FLINK_CDC_VERSION }}
             DINKY_VERSION=${{ github.ref_name }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=dinky-flink118
-          cache-to: type=gha,mode=max,scope=dinky-flink118
+          cache-from: type=gha,scope=dinky-flink120-cdc36
+          cache-to: type=gha,mode=max,scope=dinky-flink120-cdc36

@@ -18,8 +18,8 @@
         <commons.version>1.5.0</commons.version>
         <doris.connector.version>24.0.1</doris.connector.version>
         <flink.shaded.version>19.0</flink.shaded.version>
-        <flink.version>1.20.2</flink.version>
-        <flinkcdc.version>3.2.0</flinkcdc.version>
+        <flink.version>1.20.3</flink.version>
+        <flinkcdc.version>3.6.0-1.20</flinkcdc.version>
     </properties>
 
     <dependencies>
