@@ -22,6 +22,10 @@ ADD  build/dist/ /opt/dinky/config/static
 # connectors in FLINK_HOME/lib; Dinky sees the same files through extends.
 RUN set -eux; \
     repository=https://repo.maven.apache.org/maven2/org/apache/flink; \
+    mysql_driver=https://repo.maven.apache.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar; \
+    curl --fail --location --retry 3 "${mysql_driver}" \
+      --output /opt/dinky/lib/mysql-connector-java-8.0.28.jar; \
+    cp /opt/dinky/lib/mysql-connector-java-8.0.28.jar /opt/flink/lib/; \
     for artifact in \
       flink-sql-connector-mysql-cdc \
       flink-sql-connector-postgres-cdc \
