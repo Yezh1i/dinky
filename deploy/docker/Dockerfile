@@ -2,7 +2,7 @@ ARG FLINK_VERSION
 ARG FLINK_IMAGE_VERSION
 ARG DINKY_VERSION
 
-FROM flink:${FLINK_IMAGE_VERSION}-scala_2.12-java8
+FROM flink:${FLINK_IMAGE_VERSION}-scala_2.12-java11
 RUN cp /opt/flink/opt/flink-python*.jar /opt/flink/lib/ && cp /opt/flink/opt/flink-table-planner*.jar /opt/flink/lib/ 2>/dev/null || :
 ARG FLINK_VERSION
 ARG FLINK_CDC_VERSION=3.6.0-1.20
