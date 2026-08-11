@@ -33,7 +33,15 @@ RUN set -eux; \
       curl --fail --location --retry 3 \
         "${repository}/${artifact}/${FLINK_CDC_VERSION}/${artifact}-${FLINK_CDC_VERSION}.jar" \
         --output "/opt/flink/lib/${artifact}-${FLINK_CDC_VERSION}.jar"; \
-    done
+    done; \
+    release_version="${FLINK_CDC_VERSION%%-*}"; \
+    archive="flink-cdc-${FLINK_CDC_VERSION}-bin.tar.gz"; \
+    curl --fail --location --retry 3 \
+      "https://downloads.apache.org/flink/flink-cdc-${release_version}/${archive}" \
+      --output "/tmp/${archive}"; \
+    tar -xzf "/tmp/${archive}" -C /tmp; \
+    cp "/tmp/flink-cdc-${FLINK_CDC_VERSION}/lib/flink-cdc-dist-${FLINK_CDC_VERSION}.jar" /opt/flink/lib/; \
+    rm -rf "/tmp/${archive}" "/tmp/flink-cdc-${FLINK_CDC_VERSION}"
 
 RUN ln -s /opt/flink/lib/* /opt/dinky/extends/flink${FLINK_VERSION}/
 
