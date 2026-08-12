@@ -55,16 +55,13 @@ RUN ln -s /opt/flink/lib/* /opt/dinky/extends/flink${FLINK_VERSION}/
 
 # FLINK-CDC 3.6 maps MySQL BIGINT UNSIGNED primary keys to VARCHAR. Replace only
 # its data type transformer with Dinky's binary-compatible LARGEINT patch.
+ADD build/cdc-starrocks-patch/ /tmp/cdc-starrocks-patch/
 RUN set -eux; \
-    patch_jar="$(find /opt/dinky/extends/flink${FLINK_VERSION}/dinky \
-      -name 'dinky-flink-*.jar' -print -quit)"; \
     patch_class='org/apache/flink/cdc/connectors/starrocks/sink/StarRocksUtils$CdcDataTypeTransformer.class'; \
     connector_jar="/opt/flink/lib/flink-cdc-pipeline-connector-starrocks-${FLINK_CDC_VERSION}.jar"; \
-    test -n "${patch_jar}"; \
+    test -s "/tmp/cdc-starrocks-patch/${patch_class}"; \
     test -f "${connector_jar}"; \
-    mkdir -p /tmp/cdc-starrocks-patch; \
     cd /tmp/cdc-starrocks-patch; \
-    unzip -q "${patch_jar}" "${patch_class}"; \
     zip -q -d "${connector_jar}" "${patch_class}"; \
     zip -q "${connector_jar}" "${patch_class}"; \
     unzip -p "${connector_jar}" "${patch_class}" | strings | grep -q LARGEINT; \

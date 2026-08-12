@@ -78,6 +78,14 @@ jobs:
             --no-snapshot-updates
           test -n "$(find build -name 'dinky-release-*.tar.gz' -print -quit)"
 
+      - name: Prepare Flink CDC StarRocks patch
+        run: |
+          patch_class='org/apache/flink/cdc/connectors/starrocks/sink/StarRocksUtils$CdcDataTypeTransformer.class'
+          mkdir -p "build/cdc-starrocks-patch/$(dirname "${patch_class}")"
+          cp "dinky-flink/dinky-flink-1.20/target/classes/${patch_class}" \
+            "build/cdc-starrocks-patch/${patch_class}"
+          test -s "build/cdc-starrocks-patch/${patch_class}"
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
