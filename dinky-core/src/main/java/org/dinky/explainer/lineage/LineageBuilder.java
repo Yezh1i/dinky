@@ -26,6 +26,7 @@ import org.dinky.executor.ExecutorFactory;
 import org.dinky.explainer.Explainer;
 import org.dinky.job.JobConfig;
 import org.dinky.job.JobManager;
+import org.dinky.trans.pipeline.FlinkCDCPipelineOperation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,8 +41,19 @@ import java.util.Map;
 public class LineageBuilder {
 
     public static LineageResult getColumnLineageByLogicalPlan(String statement, JobConfig jobConfig) {
-        Explainer explainer = Explainer.build(JobManager.buildPlanModeWithPlanner(jobConfig));
-        return getColumnLineageByLogicalPlan(explainer.getLineage(statement));
+        if (FlinkCDCPipelineOperation.isPipelineStatement(statement)) {
+            return PipelineLineageBuilder.build(statement);
+        }
+
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        JobManager jobManager = JobManager.buildPlanModeWithPlanner(jobConfig);
+        try {
+            Explainer explainer = Explainer.build(jobManager);
+            return getColumnLineageByLogicalPlan(explainer.getLineage(statement));
+        } finally {
+            jobManager.close();
+            Thread.currentThread().setContextClassLoader(contextClassLoader);
+        }
     }
 
     public static LineageResult getColumnLineageByLogicalPlan(String statement, ExecutorConfig executorConfig) {

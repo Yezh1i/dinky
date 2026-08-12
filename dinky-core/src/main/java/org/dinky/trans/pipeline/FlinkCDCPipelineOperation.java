@@ -69,6 +69,8 @@ import org.jetbrains.annotations.Nullable;
 public class FlinkCDCPipelineOperation extends AbstractOperation implements Operation {
 
     private static final String KEY_WORD = "EXECUTE PIPELINE";
+    private static final Pattern PIPELINE_PATTERN =
+            Pattern.compile("(?is)^\\s*EXECUTE\\s+PIPELINE\\s+WITHYAML\\s+\\((.+)\\)\\s*;?\\s*$");
 
     public FlinkCDCPipelineOperation() {}
 
@@ -106,12 +108,15 @@ public class FlinkCDCPipelineOperation extends AbstractOperation implements Oper
 
     @Nullable
     public String getPipelineConfigure(String statement) {
-        Pattern patternYaml = Pattern.compile("(?is)^EXECUTE\\s+PIPELINE\\s+WITHYAML\\s+\\((.+)\\)");
-        Matcher matcherYaml = patternYaml.matcher(statement);
+        Matcher matcherYaml = PIPELINE_PATTERN.matcher(statement);
         if (matcherYaml.find()) {
             return matcherYaml.group(1);
         }
         return "";
+    }
+
+    public static boolean isPipelineStatement(String statement) {
+        return statement != null && PIPELINE_PATTERN.matcher(statement).matches();
     }
 
     public PipelineComposer createComposer(Executor executor) {
