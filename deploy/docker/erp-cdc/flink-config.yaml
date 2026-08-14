@@ -1,0 +1,52 @@
+blob.server.port: 6124
+jobmanager.rpc.address: dinky
+jobmanager.rpc.port: 6123
+jobmanager.bind-host: 0.0.0.0
+jobmanager.memory.process.size: 1280m
+jobmanager.execution.failover-strategy: region
+
+taskmanager.bind-host: 0.0.0.0
+taskmanager.numberOfTaskSlots: 16
+taskmanager.memory.process.size: 6144m
+
+parallelism.default: 16
+
+restart-strategy.type: fixed-delay
+restart-strategy.fixed-delay.attempts: 10
+restart-strategy.fixed-delay.delay: 10s
+
+execution.checkpointing.interval: 60s
+execution.checkpointing.timeout: 10min
+execution.checkpointing.min-pause: 10s
+execution.checkpointing.max-concurrent-checkpoints: 1
+execution.checkpointing.checkpoints-after-tasks-finish.enabled: true
+
+state.checkpoints.dir: file:///opt/dinky/tmp/flink-checkpoints
+state.savepoints.dir: file:///opt/dinky/tmp/flink-savepoints
+
+query.server.port: 6125
+classloader.resolve-order: parent-first
+rest.bind-address: 0.0.0.0
+rest.address: dinky
+
+env.java.opts.all: >-
+  --add-exports=java.base/sun.net.util=ALL-UNNAMED
+  --add-exports=java.rmi/sun.rmi.registry=ALL-UNNAMED
+  --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
+  --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
+  --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
+  --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED
+  --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
+  --add-exports=java.security.jgss/sun.security.krb5=ALL-UNNAMED
+  --add-opens=java.base/java.lang=ALL-UNNAMED
+  --add-opens=java.base/java.net=ALL-UNNAMED
+  --add-opens=java.base/java.io=ALL-UNNAMED
+  --add-opens=java.base/java.nio=ALL-UNNAMED
+  --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+  --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+  --add-opens=java.base/java.text=ALL-UNNAMED
+  --add-opens=java.base/java.time=ALL-UNNAMED
+  --add-opens=java.base/java.util=ALL-UNNAMED
+  --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+  --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED
+  --add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED

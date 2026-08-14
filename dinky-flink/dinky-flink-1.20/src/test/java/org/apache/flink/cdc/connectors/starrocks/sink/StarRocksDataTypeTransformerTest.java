@@ -19,6 +19,7 @@
 package org.apache.flink.cdc.connectors.starrocks.sink;
 
 import org.apache.flink.cdc.common.types.DecimalType;
+import org.apache.flink.cdc.common.types.DataTypes;
 
 import com.starrocks.connector.flink.catalog.StarRocksColumn;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,23 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class StarRocksDataTypeTransformerTest {
+
+    @Test
+    void mapsTinyIntToSmallint() {
+        StarRocksColumn column = convert(DataTypes.TINYINT(), false);
+
+        assertThat(column.getDataType()).isEqualTo("SMALLINT");
+    }
+
+    @Test
+    void mapsCoreNumericTypesUsingNineDataBaseline() {
+        assertThat(convert(DataTypes.SMALLINT(), false).getDataType()).isEqualTo("SMALLINT");
+        assertThat(convert(DataTypes.INT(), false).getDataType()).isEqualTo("INT");
+        assertThat(convert(DataTypes.BIGINT(), false).getDataType()).isEqualTo("BIGINT");
+        assertThat(convert(DataTypes.FLOAT(), false).getDataType()).isEqualTo("FLOAT");
+        assertThat(convert(DataTypes.DOUBLE(), false).getDataType()).isEqualTo("DOUBLE");
+        assertThat(convert(DataTypes.BOOLEAN(), false).getDataType()).isEqualTo("BOOLEAN");
+    }
 
     @Test
     void mapsUnsignedBigintPrimaryKeyToLargeint() {
@@ -52,7 +70,7 @@ class StarRocksDataTypeTransformerTest {
         assertThat(column.getColumnSize()).contains(20);
     }
 
-    private static StarRocksColumn convert(DecimalType type, boolean primaryKey) {
+    private static StarRocksColumn convert(org.apache.flink.cdc.common.types.DataType type, boolean primaryKey) {
         StarRocksColumn.Builder builder =
                 new StarRocksColumn.Builder().setColumnName("id").setOrdinalPosition(0);
         type.accept(new StarRocksUtils$CdcDataTypeTransformer(primaryKey, builder));

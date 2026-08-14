@@ -1,0 +1,107 @@
+name: ${COMPOSE_PROJECT_NAME:-erp-cdc}
+
+services:
+  dinky-db:
+    image: ${MYSQL_IMAGE}
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+      MYSQL_DATABASE: ${DINKY_DB_NAME}
+      MYSQL_USER: ${DINKY_DB_USER}
+      MYSQL_PASSWORD: ${DINKY_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DINKY_DB_ROOT_PASSWORD}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ${DINKY_DB_ROOT}:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    networks: [cdc]
+
+  starrocks-fe:
+    image: ${STARROCKS_FE_IMAGE}
+    hostname: starrocks-fe
+    restart: unless-stopped
+    environment:
+      TZ: ${TZ}
+    command: ["bash", "-c", "exec bash /opt/starrocks/fe/bin/start_fe.sh --host_type FQDN"]
+    ports:
+      - ${BIND_IP}:8030:8030
+      - ${BIND_IP}:9020:9020
+      - ${BIND_IP}:9030:9030
+    volumes:
+      - ${STARROCKS_DATA_ROOT}/fe/meta:/opt/starrocks/fe/meta
+      - ${STARROCKS_DATA_ROOT}/fe/log:/opt/starrocks/fe/log
+    networks:
+      cdc:
+        aliases: [starrocks-fe]
+
+  starrocks-be:
+    image: ${STARROCKS_BE_IMAGE}
+    hostname: starrocks-be
+    restart: unless-stopped
+    depends_on:
+      - starrocks-fe
+    environment:
+      TZ: ${TZ}
+    command:
+      - /bin/bash
+      - -c
+      - |
+        ulimit -n 65535
+        sleep 15
+        mysql --connect-timeout 2 -h starrocks-fe -P9030 -uroot \
+          -e 'ALTER SYSTEM ADD BACKEND "starrocks-be:9050";' || true
+        exec bash /opt/starrocks/be/bin/start_be.sh
+    ports:
+      - ${BIND_IP}:8040:8040
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    volumes:
+      - ${STARROCKS_DATA_ROOT}/be/storage:/opt/starrocks/be/storage
+      - ${STARROCKS_DATA_ROOT}/be/log:/opt/starrocks/be/log
+    networks:
+      cdc:
+        aliases: [starrocks-be]
+
+  dinky:
+    image: ${DINKY_IMAGE}
+    hostname: dinky
+    restart: unless-stopped
+    depends_on:
+      dinky-db:
+        condition: service_healthy
+      starrocks-fe:
+        condition: service_started
+      starrocks-be:
+        condition: service_started
+    environment:
+      TZ: ${TZ}
+      JAVA_TOOL_OPTIONS: -Duser.timezone=Asia/Shanghai
+      JVM_OPTS: ${DINKY_JVM_OPTS}
+      DB_ACTIVE: mysql
+      MYSQL_ADDR: dinky-db:3306
+      MYSQL_DATABASE: ${DINKY_DB_NAME}
+      MYSQL_USERNAME: ${DINKY_DB_USER}
+      MYSQL_PASSWORD: ${DINKY_DB_PASSWORD}
+    ports:
+      - ${BIND_IP}:8888:8888
+      - ${BIND_IP}:8081:8081
+    volumes:
+      - ${DINKY_DATA_ROOT}/customJar:/opt/dinky/customJar
+      - ${DINKY_DATA_ROOT}/logs:/opt/dinky/logs
+      - ${DINKY_DATA_ROOT}/tmp:/opt/dinky/tmp
+      - ./flink-config.yaml:/opt/flink/conf/config.yaml:ro
+    networks:
+      cdc:
+        aliases: [dinky]
+
+networks:
+  cdc:
+    name: erp-cdc-network

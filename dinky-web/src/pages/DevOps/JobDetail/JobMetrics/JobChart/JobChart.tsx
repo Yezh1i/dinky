@@ -57,7 +57,18 @@ const JobChart = (props: JobChartProps) => {
   });
 
   const dataProcess = (chData: Record<string, ChartData[]>, data: MetricsDataType) => {
-    const verticesMap = data.content as Record<string, Record<string, string>>;
+    let verticesMap: Record<string, Record<string, string>>;
+    try {
+      verticesMap =
+        typeof data.content === 'string'
+          ? JSON.parse(data.content)
+          : (data.content as Record<string, Record<string, string>>);
+    } catch {
+      return;
+    }
+    if (!verticesMap || typeof verticesMap !== 'object') {
+      return;
+    }
     Object.keys(verticesMap).forEach((verticeId) =>
       Object.keys(verticesMap[verticeId]).forEach((mertics) => {
         const key = `${verticeId}-${mertics}`;
@@ -97,7 +108,7 @@ const JobChart = (props: JobChartProps) => {
             key={key}
             chartSize={metricsItem.showSize}
             chartType={metricsItem.showType}
-            title={metricsItem.metrics}
+            title={metricsItem.title || metricsItem.metrics}
             data={chartData[key] ?? []}
           />
         );

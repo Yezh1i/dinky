@@ -53,18 +53,19 @@ RUN set -eux; \
 
 RUN ln -s /opt/flink/lib/* /opt/dinky/extends/flink${FLINK_VERSION}/
 
-# FLINK-CDC 3.6 maps MySQL BIGINT UNSIGNED primary keys to VARCHAR. Replace only
-# its data type transformer with Dinky's binary-compatible LARGEINT patch.
+# Patch the runtime classes that own MySQL-to-StarRocks type conversion and DDL generation.
 ADD build/cdc-starrocks-patch/ /tmp/cdc-starrocks-patch/
 RUN set -eux; \
-    patch_class='org/apache/flink/cdc/connectors/starrocks/sink/StarRocksUtils$CdcDataTypeTransformer.class'; \
     connector_jar="/opt/flink/lib/flink-cdc-pipeline-connector-starrocks-${FLINK_CDC_VERSION}.jar"; \
-    test -s "/tmp/cdc-starrocks-patch/${patch_class}"; \
     test -f "${connector_jar}"; \
     cd /tmp/cdc-starrocks-patch; \
-    zip -q -d "${connector_jar}" "${patch_class}"; \
-    zip -q "${connector_jar}" "${patch_class}"; \
-    unzip -p "${connector_jar}" "${patch_class}" | strings | grep -q LARGEINT; \
+    find org -type f -name '*.class' -print | while read -r patch_class; do \
+      test -s "${patch_class}"; \
+      zip -q -d "${connector_jar}" "${patch_class}" || true; \
+      zip -q "${connector_jar}" "${patch_class}"; \
+    done; \
+    unzip -p "${connector_jar}" 'org/apache/flink/cdc/connectors/starrocks/sink/StarRocksUtils$CdcDataTypeTransformer.class' | strings | grep -q LARGEINT; \
+    unzip -p "${connector_jar}" 'org/apache/flink/cdc/connectors/starrocks/sink/StarRocksEnrichedCatalog.class' | strings | grep -q 'Failed to create table'; \
     rm -rf /tmp/cdc-starrocks-patch
 
 WORKDIR /opt/dinky/

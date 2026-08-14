@@ -1,0 +1,45 @@
+# Render every placeholder token before saving the statement in Dinky.
+# Keep credentials in Dinky's restricted variable/secret management, not in Git.
+
+EXECUTE PIPELINE WITHYAML (
+source:
+  type: mysql
+  hostname: __MYSQL_HOST__
+  port: __MYSQL_PORT__
+  username: "__MYSQL_CDC_USER__"
+  password: "__MYSQL_CDC_PASSWORD__"
+  tables: '__SOURCE_DATABASE__.(__TABLE_WHITELIST_REGEX__)'
+  server-id: __UNIQUE_SERVER_ID_START__-__UNIQUE_SERVER_ID_END__
+  server-time-zone: Asia/Shanghai
+  scan.startup.mode: initial
+  scan.incremental.snapshot.chunk.size: 16384
+  scan.snapshot.fetch.size: 2048
+  connect.timeout: 30s
+  connect.max-retries: 5
+  connection.pool.size: 4
+  heartbeat.interval: 30s
+  include-comments.enabled: true
+
+sink:
+  type: starrocks
+  jdbc-url: jdbc:mysql://starrocks-fe:9030
+  load-url: starrocks-be:8040
+  username: "__STARROCKS_SINK_USER__"
+  password: "__STARROCKS_SINK_PASSWORD__"
+  table.create.properties.replication_num: 1
+  table.create.num-buckets: 16
+  sink.buffer-flush.max-bytes: 134217728
+  sink.buffer-flush.interval-ms: 10000
+  sink.scan-frequency.ms: 50
+  sink.io.thread-count: 2
+  sink.at-least-once.use-transaction-stream-load: false
+
+route:
+- source-table: __SOURCE_DATABASE__.\.*
+  sink-table: __TARGET_DATABASE__.<>
+  replace-symbol: <>
+
+pipeline:
+  name: __PIPELINE_NAME__
+  parallelism: 16
+)

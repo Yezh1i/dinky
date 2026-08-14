@@ -70,7 +70,8 @@ public class StarRocksUtils$CdcDataTypeTransformer
 
     @Override
     public StarRocksColumn.Builder visit(TinyIntType type) {
-        return type("TINYINT", type.isNullable());
+        // Keep the full MySQL TINYINT range, including unsigned values after source widening.
+        return type("SMALLINT", type.isNullable());
     }
 
     @Override
