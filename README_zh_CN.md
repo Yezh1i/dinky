@@ -1,14 +1,10 @@
 # Dinky
 
-[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg?style=socialflat-square&)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Stars](https://img.shields.io/github/stars/DataLinkDC/dinky?style=socialflat-square&label=stars)](https://github.com/DataLinkDC/dinky/stargazers)
-[![Downloads](https://img.shields.io/github/downloads/DataLinkDC/dinky/total.svg)](https://github.com/DataLinkDC/dinky/releases)
-[![CN doc](https://img.shields.io/badge/文档-中文版-blue.svg?style=socialflat-square&)](README_zh_CN.md)
-[![EN doc](https://img.shields.io/badge/document-English-blue.svg?style=socialflat-square&)](README.md)
-
-[![Stargazers over time](https://starchart.cc/DataLinkDC/dinky.svg)](https://starchart.cc/DataLinkDC/dinky)
-
-
+[License](https://www.apache.org/licenses/LICENSE-2.0.html)  
+[Stars](https://github.com/DataLinkDC/dinky/stargazers)  
+[Downloads](https://github.com/DataLinkDC/dinky/releases)  
+[CN doc](README_zh_CN.md)  
+[EN doc](README.md)
 
 ## 简介
 
@@ -32,39 +28,41 @@
 - 支持企业级管理：多租户、用户、角色、菜单、令牌
 - 更多隐藏功能等待小伙伴们探索
 
+
+
 ## 原理
 
-![dinky_principle](https://raw.githubusercontent.com/DataLinkDC/dinky/dev/images/main/dinky_principle.png)
+dinky_principle
 
 ## 运行效果
 
 > 数据开发
 
-![datastudio](https://raw.githubusercontent.com/DataLinkDC/dinky/dev/images/v1-2/datastudio.png)
+datastudio
 
 > 数据调试
 
-![datadebug](https://raw.githubusercontent.com/DataLinkDC/dinky/dev/images/v1-2/data-debug.png)
+datadebug
 
 > 作业监控
 
-![devops](https://raw.githubusercontent.com/DataLinkDC/dinky/dev/images/v1-2/devops.png)
+devops
 
 > 作业指标
 
-![metrics](https://raw.githubusercontent.com/DataLinkDC/dinky/dev/images/v1-2/metrics.png)
+metrics
 
 ## 参与贡献
 
 dev 分支为 Dinky 1.3.0, 1.2 分支为 Dinky 1.2.5。
 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/DataLinkDC/dinky/pulls)
+[PRs Welcome](https://github.com/DataLinkDC/dinky/pulls)
 
 欢迎加入社区，共建共赢，贡献流程请参考： [参与贡献](https://github.com/DataLinkDC/dinky/blob/dev/docs/docs/developer_guide/contribution/how_contribute.md)
 
 感谢所有已经为 Dinky 做出贡献的人！
 
-[![contrib graph](https://contrib.rocks/image?repo=DataLinkDC/dinky)](https://github.com/DataLinkDC/dinky/graphs/contributors)
+[contrib graph](https://github.com/DataLinkDC/dinky/graphs/contributors)
 
 ## 如何部署
 
@@ -100,7 +98,7 @@ dev 分支为 Dinky 1.3.0, 1.2 分支为 Dinky 1.2.5。
 
 感谢 [JetBrains](https://www.jetbrains.com/?from=dlink) 提供的免费开源 License 赞助。
 
-[![JetBrains](https://raw.githubusercontent.com/DataLinkDC/dinky/main/images/main/jetbrains.svg)](https://www.jetbrains.com/?from=dlink)
+[JetBrains](https://www.jetbrains.com/?from=dlink)
 
 ## 获得帮助
 
