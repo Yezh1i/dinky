@@ -65,3 +65,13 @@ extends/*
 .idea
 .idea/vcs.xml
 dinky-web/package-lock.json
+
+# Environment files with credentials
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Package manager cache
+.pnpm-store/
+node_modules/
