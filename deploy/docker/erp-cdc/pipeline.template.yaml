@@ -22,8 +22,8 @@ source:
 
 sink:
   type: starrocks
-  jdbc-url: jdbc:mysql://starrocks-fe:9030
-  load-url: starrocks-be:8040
+  jdbc-url: jdbc:mysql://__STARROCKS_QUERY_HOST__:__STARROCKS_QUERY_PORT__
+  load-url: __STARROCKS_LOAD_HOST__:__STARROCKS_LOAD_PORT__
   username: "__STARROCKS_SINK_USER__"
   password: "__STARROCKS_SINK_PASSWORD__"
   table.create.properties.replication_num: 1

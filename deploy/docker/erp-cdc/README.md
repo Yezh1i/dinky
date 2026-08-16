@@ -1,26 +1,31 @@
-# ERP CDC deployment bundle
+# ERP CDC 最小部署
 
-This directory is the deployable companion to the Chinese production runbook:
+这个 Compose 只启动一个 `dinky` 服务，其中包含 Flink 1.20.3 和已验收的 CDC 补丁。
 
-`docs/docs/practical_guide/scenario_practice/mysqlcdc2starrocks.md`
+Dinky 元数据库、源 MySQL 和目标 StarRocks 都使用你已有的外部服务，本部署包不会安装、启动、修改或删除它们。
 
-## Files
+## 启动
 
-- `compose.yaml`: Dinky metadata MySQL, Dinky/Flink, and one-node StarRocks.
-- `flink-config.yaml`: the verified 16-slot, 6 GiB TaskManager baseline.
-- `pipeline.template.yaml`: sanitized Dinky Flink CDC Pipeline template.
-- `preflight.sql`: read-only source metadata admission checks.
-- `.env.example`: image pins, bind address, persistent paths, and local secrets.
+```bash
+cp .env.example .env
+chmod 600 .env
+docker compose --env-file .env -f compose.yaml config --quiet
+docker compose --env-file .env -f compose.yaml up -d
+```
 
-## Bootstrap
+启动前在 `.env` 填写已有 Dinky 元数据库的地址、端口、库名、账号和密码。MySQL 位于同一台 Docker 宿主机时使用 `DINKY_DB_HOST=host.docker.internal`；位于其他服务器时填写实际内网地址。不要填写 `127.0.0.1`，容器中的该地址指向 Dinky 容器自身。
 
-1. Use a host with at least 8 vCPU and 32 GiB RAM; 16 vCPU and 64 GiB RAM is recommended.
-2. Copy `.env.example` to `.env`, replace every password, and run `chmod 600 .env`.
-3. Keep `BIND_IP=127.0.0.1` unless a protected management network is configured.
-4. Create the persistent root directories from `.env`.
-5. Run `docker compose --env-file .env -f compose.yaml config` and review the rendered configuration.
-6. Start with `docker compose --env-file .env -f compose.yaml up -d`.
-7. Change the default StarRocks root password and create a least-privilege sink user before submitting a task.
-8. Run `preflight.sql`, build an explicit table whitelist, and test a canary task first.
+Dinky：`http://127.0.0.1:8888`
 
-Do not reuse the example passwords, reuse an active MySQL CDC server-id range, or restore a savepoint across unverified Flink/CDC versions.
+Flink：`http://127.0.0.1:8081`
+
+端口默认只监听 `127.0.0.1`。需要远程访问时使用 SSH 隧道，不直接开放公网。
+
+## 提交 CDC
+
+1. 运行 `preflight.sql` 生成显式表白名单。
+2. 替换 `pipeline.template.yaml` 中所有占位符，包括外部 StarRocks 的查询地址和 Stream Load 地址。
+3. 先用 1 至 3 张 canary 表验证类型、注释、中文字段和 DDL。
+4. 通过 Dinky Catalogue + Task API 提交正式任务。
+
+StarRocks 不在本部署包的操作范围内。这里只把用户提供的查询地址、Stream Load 地址和 Sink 账号填入 Pipeline，不安装或修改 StarRocks。

@@ -504,14 +504,15 @@ deploy/docker/erp-cdc/
 
 1. 准备固定版本 Docker/Compose、时间同步、防火墙和持久化目录。
 2. 从 `.env.example` 创建本机 `.env`，设置 0600 权限。
-3. 启动 Dinky 元数据库、StarRocks FE/BE 和 Dinky。
-4. 修改 StarRocks 默认 root 密码，创建最小权限 Sink 账号。
+3. 确认用户已有的 Dinky 元数据库可访问，并在 `.env` 填写连接信息；本 Compose 不启动或修改 MySQL。
+4. 启动 Dinky。
 5. 在 Dinky 创建 Flink Standalone 集群并验证 16 Slot。
 6. 执行 `preflight.sql`，生成显式白名单。
-7. 渲染 Pipeline 模板，通过 Catalogue + Task API 创建任务。
-8. 先用 1 至 3 张 canary 表验证类型、注释、中文字段和 DDL。
-9. 全库首次同步到新目标库，观察 30 分钟稳定性。
-10. 完成验收清单后才允许切换。
+7. 使用用户提供的 StarRocks 查询地址、Stream Load 地址和 Sink 账号渲染 Pipeline 模板；本流程不操作 StarRocks 服务。
+8. 通过 Catalogue + Task API 创建任务。
+9. 先用 1 至 3 张 canary 表验证类型、注释、中文字段和 DDL。
+10. 全库首次同步到新目标库，观察 30 分钟稳定性。
+11. 完成验收清单后才允许切换。
 
 ## 15. 上线验收清单
 
